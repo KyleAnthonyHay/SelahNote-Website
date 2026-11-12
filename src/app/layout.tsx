@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Willow - Voice Dictation",
-  description: "AI-powered voice dictation that's so powerful it can replace your keyboard.",
+  title: "SelahNote - Sermon Note Taker",
+  description:
+    "SelahNote records your sermon, finds every Scripture reference, so you can focus on listening instead of writing.",
 };
 
 export default function RootLayout({
@@ -18,9 +22,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
+    <html lang="en" className={inter.variable}>
+      <body className="font-sans antialiased">
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );

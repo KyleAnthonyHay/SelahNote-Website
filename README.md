@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SelahNote website
 
-## Getting Started
+Next.js 16 + Tailwind v4 recreation of [selahnote.app](https://selahnote.app) (previously built in Framer).
 
-First, run the development server:
+## Run it
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where things live
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| What | Where |
+| --- | --- |
+| Page order | `src/app/page.tsx` |
+| All copy, links, reviews, FAQs, pricing | `src/data/content.ts` |
+| Image slots (screenshots, illustrations, icons, avatars) | `src/data/assets.ts` + `ASSETS.md` |
+| Sections | `src/components/*.tsx` |
+| Buttons, phone mockup, headings, placeholders | `src/components/ui/` |
+| SVG icons (feature + pricing glyphs, bubble notches, logo fallback) | `src/components/icons.tsx` |
+| Type scale, colors, shadows, animations | `src/app/globals.css` |
 
-## Learn More
+## Adding the remaining graphics
 
-To learn more about Next.js, take a look at the following resources:
+Every image on the page is a slot in `src/data/assets.ts`. While a slot is `null` a striped, labelled placeholder is rendered. Drop the file into `public/assets/` and set the slot to its path. `ASSETS.md` lists every slot with the exact size it needs.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Motion
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Animations use [Motion](https://motion.dev) (`motion/react`, loaded lazily through `MotionProvider` in `src/app/layout.tsx`).
 
-## Deploy on Vercel
+- `src/components/motion/Reveal.tsx` has two wrappers: `FadeIn` animates on mount (hero copy and phones), `Reveal` animates the first time an element scrolls into view. Both accept `delay`, `y`, `scale`, `duration`, and skip the animation entirely when the visitor prefers reduced motion.
+- The hero phones rise 110px while scaling from 80%, the front phone leading the back one, matching the live site's load animation.
+- Cards and FAQ rows stagger by about 0.1s per item. Buttons get a small spring on hover and press (`src/components/ui/Button.tsx`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Layout notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Desktop layout is pixel-matched to the live site at a 1120px content width (nav 800px, footer 1160px); sections are separated by 120px.
+- Breakpoints follow Framer's: phone `< 810px`, tablet `810–1199px`, desktop `>= 1200px` (`tablet:` / `desktop:` and `max-tablet:` / `max-desktop:` variants).
+- Fonts: Inter 400/500/600 via `next/font`.

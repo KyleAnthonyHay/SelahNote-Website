@@ -1,33 +1,73 @@
+import { assets } from "@/data/assets";
+import { hero, links } from "@/data/content";
+import { AppStoreBadge } from "./ui/Button";
+import { PhoneMockup } from "./ui/PhoneMockup";
+import { EASE_PHONE, FadeIn } from "./motion/Reveal";
+
+/**
+ * Load choreography (measured from the reference recording):
+ * copy settles almost immediately, then both phones rise ~110px while scaling
+ * from 80%, the front phone leading the back one by a few frames.
+ */
+const PHONE = { y: 110, scale: 0.8, duration: 0.65, ease: EASE_PHONE };
+
 export default function Hero() {
   return (
-    <section className="pt-[150px] pb-12 flex flex-col items-center text-center px-6">
-      <h1 className="text-[46px] leading-[1.18] font-bold text-[#1a1a2e] tracking-[-0.025em] max-w-[580px]">
-        Stop typing. Start writing
-        <br />
-        5x faster with voice.
-      </h1>
+    <section
+      id="hero"
+      className="relative h-[1126px] overflow-hidden max-tablet:h-auto max-tablet:pb-0"
+    >
+      <div id="download" className="flex flex-col items-center px-5 pt-[140px] text-center">
+        <FadeIn y={14} duration={0.5}>
+          <h1 className="t-h1 max-w-[500px] text-black">
+            <span className="text-muted">{hero.titleMuted}</span>
+            <br />
+            {hero.title}
+          </h1>
+        </FadeIn>
+        <FadeIn y={14} duration={0.5} delay={0.06} className="mt-[18px]">
+          <p className="t-p max-w-[500px] text-muted">{hero.body}</p>
+        </FadeIn>
+        <FadeIn y={14} duration={0.5} delay={0.12} className="mt-8">
+          <AppStoreBadge href={links.appStore} />
+        </FadeIn>
+      </div>
 
-      <p className="mt-5 text-[15.5px] leading-[1.65] text-[#777] max-w-[380px]">
-        AI-powered voice dictation that&apos;s so powerful it can
-        replace your keyboard.
-      </p>
-
-      <button className="mt-7 flex items-center gap-2 bg-[#4b4acf] hover:bg-[#4140b8] text-white text-[14px] font-medium rounded-full px-7 py-[11px] transition-colors shadow-lg shadow-indigo-200/60 cursor-pointer">
-        <AppleIcon />
-        Download for Free
-      </button>
-
-      <p className="mt-4 text-[12px] text-[#aaa] tracking-[0.01em]">
-        Available on Mac, iPhone, and Windows for free
-      </p>
+      {/* Two tilted phones. Centers sit 77px left / 119px right of the page center on desktop;
+          on phones they stack, the front one tilted the other way. The outer box carries the
+          fade (opaque to 270px below the phone tops, gone by 469px), so the fade line stays
+          horizontal in page space while the phones tilt and rise into it. A mask also clips to
+          its box, so the box starts 27px above the phones to leave room for the tilted corners. */}
+      <div className="relative mx-auto mt-[60px] h-[639px] w-full max-w-[1120px] pt-[27px] mask-b-from-[297px] mask-b-to-[496px] max-tablet:mt-[21px] max-tablet:h-[587px] max-tablet:overflow-hidden">
+        <div className="relative h-full">
+          <FadeIn
+            {...PHONE}
+            delay={0.16}
+            className="absolute top-0 left-[calc(50%_-_227px)] z-0 max-tablet:left-[calc(50%_-_140px)]"
+          >
+            <PhoneMockup
+              width={300}
+              screenSrc={assets.heroScreen1}
+              screenLabel="Hero screenshot 1 — Home / Recent Notes"
+              className="-rotate-[13deg] max-tablet:rotate-0"
+              priority
+            />
+          </FadeIn>
+          <FadeIn
+            {...PHONE}
+            delay={0.08}
+            className="absolute top-0 left-[calc(50%_-_31px)] z-10 max-tablet:top-[70px] max-tablet:left-[calc(50%_-_165px)]"
+          >
+            <PhoneMockup
+              width={300}
+              screenSrc={assets.heroScreen2}
+              screenLabel="Hero screenshot 2 — Transcript tab"
+              className="rotate-[5deg] max-tablet:-rotate-[8deg]"
+              priority
+            />
+          </FadeIn>
+        </div>
+      </div>
     </section>
-  );
-}
-
-function AppleIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 14 17" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path d="M11.182 8.894c-.02-1.825 1.49-2.702 1.558-2.744-.848-1.24-2.168-1.41-2.638-1.43-1.123-.114-2.193.662-2.764.662-.57 0-1.452-.645-2.386-.628-1.228.018-2.36.714-2.993 1.813-1.275 2.213-.327 5.493.917 7.292.608.88 1.332 1.868 2.284 1.833.916-.037 1.263-.593 2.371-.593 1.109 0 1.418.593 2.382.575.986-.017 1.607-.897 2.211-1.78.697-1.021.983-2.01 1-2.061-.022-.01-1.92-.737-1.942-2.939zM9.355 3.603C9.856 2.994 10.197 2.162 10.107 1.5c-.718.029-1.588.478-2.103 1.082-.462.534-.866 1.387-.758 2.205.8.062 1.618-.407 2.109-1.184z" />
-    </svg>
   );
 }
